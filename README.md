@@ -118,7 +118,11 @@ which is deterministic.
 | `personas.py` | The five children |
 | `prompts.py` | Both prompts and both JSON schemas |
 | `demo_fallback.json` | Pre-recorded session for offline demo mode |
-| `build_docs.py` | Generates `docs/index.html` — the zero-setup replay on GitHub Pages |
+| `build_docs.py` | Generates `docs/index.html` — the zero-setup replay |
+| `build_play.py` | Generates `docs/play/index.html` — the live, backend-free browser build |
+| `build_play_verify.py` | Proves the browser prompts match `prompts.py` byte-for-byte |
+| `build_play_core_test.py` | Runs the browser port of `core.py` against the offline fixtures |
+| `render.yaml` / `vercel.json` | One-click static deploys of `docs/` |
 
 ---
 
@@ -126,7 +130,16 @@ which is deterministic.
 
 **Zero-setup replay:** <https://deepakwadge81.github.io/kaksha/> — the recorded lesson as
 a static page. No install, no key, no spend; six turns, the X-ray reveal and the full
-coaching report. Regenerate it from the live data with `python build_docs.py`.
+coaching report.
+
+**Teach a live class:** <https://deepakwadge81.github.io/kaksha/play/> — the same
+simulation, no backend. It calls the Claude API straight from the visitor's browser
+(`anthropic-dangerous-direct-browser-access`) with the visitor's own key, held in
+`sessionStorage` and sent nowhere else. ~$0.05–0.15 for a six-turn lesson plus the report.
+
+Regenerate both with `python build_docs.py && python build_play.py`, then check the
+port with `python build_play_verify.py` (prompts byte-identical to `prompts.py`) and
+`python build_play_core_test.py` (the `core.py` port against the offline fixtures).
 
 
 Sidebar has **Demo mode (offline)** — replays a recorded session with zero network
