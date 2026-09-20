@@ -118,10 +118,16 @@ which is deterministic.
 | `personas.py` | The five children |
 | `prompts.py` | Both prompts and both JSON schemas |
 | `demo_fallback.json` | Pre-recorded session for offline demo mode |
+| `build_docs.py` | Generates `docs/index.html` — the zero-setup replay on GitHub Pages |
 
 ---
 
 ## Demoing
+
+**Zero-setup replay:** <https://deepakwadge81.github.io/kaksha/> — the recorded lesson as
+a static page. No install, no key, no spend; six turns, the X-ray reveal and the full
+coaching report. Regenerate it from the live data with `python build_docs.py`.
+
 
 Sidebar has **Demo mode (offline)** — replays a recorded session with zero network
 calls. Use it if the venue wifi dies. The model name is editable in the sidebar; swap it

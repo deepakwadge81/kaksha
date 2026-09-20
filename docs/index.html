@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KAKSHA — a flight simulator for teachers</title>
+<meta name="description" content="Claude plays five Grade 3 children with hidden learning levels and hidden misconceptions. Teach blind, then the X-ray turns on.">
+<style>
+:root{
+  --bg:#faf9f7; --panel:#fff; --ink:#1b1a18; --muted:#6a6560; --line:#e3ddd6;
+  --engaged:#2e9e5b; --drifting:#c98a12; --lost:#b03636; --xray:#7b5cd6;
+  --accent:#1b1a18;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#15140f; --panel:#1e1c17; --ink:#f2efe9; --muted:#a09a91; --line:#33302a;
+    --engaged:#4cc97c; --drifting:#e0a734; --lost:#e06767; --xray:#a68bf0;
+    --accent:#f2efe9;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px;padding-block:44px 64px}
+h1{font-size:clamp(2rem,6vw,2.9rem);line-height:1.08;margin:0 0 .3em;letter-spacing:-.02em}
+h2{font-size:1.32rem;margin:2.6em 0 .7em;letter-spacing:-.01em}
+h3{font-size:1rem;margin:1.6em 0 .4em}
+p{margin:0 0 1em}
+a{color:inherit;text-decoration:underline;text-underline-offset:2px;
+  text-decoration-color:color-mix(in srgb,var(--ink) 35%,transparent)}
+.lede{font-size:1.12rem;color:var(--muted);max-width:62ch}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin:1.4em 0 0}
+.badge{font-size:.76rem;border:1px solid var(--line);border-radius:999px;
+  padding:.3em .8em;color:var(--muted);background:var(--panel)}
+.rule{height:1px;background:var(--line);border:0;margin:2.6em 0}
+
+.kids{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:1.2em 0}
+@media (max-width:640px){.kids{grid-template-columns:repeat(2,1fr)}}
+.kid{border:1px solid var(--line);border-radius:14px;padding:.7rem .55rem;
+  text-align:center;background:var(--panel);transition:border-color .25s,opacity .25s}
+.kid .face{font-size:1.85rem;line-height:1.2}
+.kid .nm{font-weight:650;margin-top:.15rem;font-size:.95rem}
+.kid .bd{font-size:.68rem;color:var(--muted);margin-top:.1rem}
+.kid .st{font-size:.63rem;text-transform:uppercase;letter-spacing:.06em;
+  font-weight:700;margin-top:.45rem}
+.kid[data-eng="engaged"]{border-color:color-mix(in srgb,var(--engaged) 55%,var(--line))}
+.kid[data-eng="engaged"] .st{color:var(--engaged)}
+.kid[data-eng="drifting"]{border-color:color-mix(in srgb,var(--drifting) 55%,var(--line))}
+.kid[data-eng="drifting"] .st{color:var(--drifting)}
+.kid[data-eng="lost"]{border-color:color-mix(in srgb,var(--lost) 55%,var(--line));opacity:.66}
+.kid[data-eng="lost"] .st{color:var(--lost)}
+
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:1.4em 0}
+button{font:inherit;font-size:.92rem;font-weight:600;cursor:pointer;
+  border:1px solid var(--line);border-radius:10px;padding:.62em 1.1em;
+  background:var(--panel);color:var(--ink)}
+button.primary{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+button:disabled{opacity:.42;cursor:not-allowed}
+.progress{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.turn{margin:1.5em 0}
+.tline{background:color-mix(in srgb,var(--ink) 6%,transparent);
+  border-left:3px solid color-mix(in srgb,var(--ink) 42%,transparent);
+  padding:.6rem .85rem;border-radius:0 8px 8px 0;margin-bottom:.7em}
+.tline b{letter-spacing:.02em}
+.resp{padding:.15rem 0 .15rem .3rem;margin-bottom:.5em}
+.says{margin:0}
+.says .who{font-weight:650}
+.beh{font-size:.85rem;color:var(--muted);font-style:italic}
+.silent{font-size:.87rem;color:var(--muted);font-style:italic}
+.xr{display:none;font-size:.85rem;font-style:italic;margin-top:.25rem;
+  padding:.25rem .6rem;border-left:2px solid var(--xray);border-radius:0 6px 6px 0;
+  background:color-mix(in srgb,var(--xray) 12%,transparent)}
+body.xray .xr{display:block}
+.note{font-size:.88rem;color:var(--muted);margin:.5em 0 0}
+
+.reveal{border:1px solid color-mix(in srgb,var(--xray) 45%,var(--line));
+  background:color-mix(in srgb,var(--xray) 9%,var(--panel));
+  border-radius:14px;padding:1rem 1.1rem;margin:1.6em 0}
+.reveal h3{margin-top:0}
+.hidden{display:none}
+
+.scores{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:1.2em 0}
+@media (max-width:640px){.scores{grid-template-columns:1fr}}
+.score{border:1px solid var(--line);border-radius:12px;padding:.8rem .9rem;background:var(--panel)}
+.score .v{font-size:1.9rem;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.score .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.meter{height:5px;border-radius:99px;background:color-mix(in srgb,var(--ink) 12%,transparent);
+  margin-top:.5rem;overflow:hidden}
+.meter i{display:block;height:100%;border-radius:99px;background:var(--lost)}
+.headline{font-size:1.12rem;font-weight:600;margin:.2em 0 1em;line-height:1.45}
+
+table{width:100%;border-collapse:collapse;font-size:.9rem;margin:.6em 0 1em}
+.tw{overflow-x:auto}
+th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+ul{margin:.3em 0 1em;padding-left:1.15em}
+li{margin-bottom:.4em}
+.tag{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  padding:.16em .5em;border-radius:5px;white-space:nowrap}
+.tag.yes{color:var(--engaged);background:color-mix(in srgb,var(--engaged) 15%,transparent)}
+.tag.no{color:var(--lost);background:color-mix(in srgb,var(--lost) 15%,transparent)}
+footer{margin-top:3.4em;padding-top:1.4em;border-top:1px solid var(--line);
+  font-size:.87rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>KAKSHA <span aria-hidden="true">🪑</span></h1>
+<p class="lede"><strong>Five children. Each has a hidden learning level and a hidden
+misconception.</strong> You get six turns. You teach blind — then the X-ray turns on and
+you see what you walked past.</p>
+<div class="badges">
+  <span class="badge">Recorded session — no API key needed</span>
+  <span class="badge">Grade 3 · two-digit subtraction</span>
+  <span class="badge"><a href="https://github.com/deepakwadge81/kaksha">Source on GitHub</a></span>
+</div>
+
+<hr class="rule">
+
+<p>A trainee teacher can fail this classroom a hundred times before ever meeting a real
+child. Reading levels use the <strong>ASER 2024</strong> bands, and the spread across
+these five is the documented finding that learning levels inside one nominal grade span
+about <strong>seven grade-equivalents</strong>. The maths bugs are the classic documented
+subtraction errors: smaller-from-larger, and borrowing across a zero.</p>
+<p class="note">This page replays one recorded lesson so you can see the whole arc with
+no setup. In the live app, Claude plays all five children in response to whatever you
+actually say.</p>
+
+<h2>The class</h2>
+<div class="kids" id="kids"></div>
+<p class="note" id="pubnote"></p>
+
+<h2>The lesson</h2>
+<div class="controls">
+  <button class="primary" id="next">Teach the next turn →</button>
+  <button id="skip">Skip to the end</button>
+  <span class="progress" id="prog"></span>
+</div>
+<div id="turns"></div>
+
+<div id="endzone" class="hidden">
+  <div class="reveal">
+    <h3>🔍 X-ray on</h3>
+    <p style="margin:0">The lesson is replayed above with what each child was actually
+    thinking — the thing a real teacher never gets to see. Their hidden profiles are
+    below, and the coaching report follows.</p>
+  </div>
+
+  <h2>What was hidden from you</h2>
+  <div class="tw"><table id="hidden-table"></table></div>
+
+  <h2>Coaching report</h2>
+  <p class="headline" id="headline"></p>
+  <div class="scores" id="scores"></div>
+  <h3>Attention</h3>
+  <div class="tw"><table id="attention"></table></div>
+  <h3>Misconceptions</h3>
+  <div class="tw"><table id="misconceptions"></table></div>
+  <h3>Moments</h3>
+  <div id="moments"></div>
+  <h3>Next time</h3>
+  <ul id="nexttime"></ul>
+</div>
+
+<footer>
+  <p><strong>KAKSHA</strong> — built for the AI for Foundational Learning hackathon
+  (ShikshaNext × Anthropic × Central Square Foundation), Theme 3: Teacher Support &amp;
+  Training.</p>
+  <p>No real child data, no recording, no consent problem — the children are calibrated
+  to published distributions, not observed from any classroom. It's a practice
+  environment, not an evidence claim.</p>
+  <p><a href="https://github.com/deepakwadge81/kaksha">Source, tests and the live
+  Streamlit app →</a></p>
+</footer>
+
+</div>
+
+<script id="data" type="application/json">{"lesson": {"grade": "Grade 3", "subject": "Mathematics", "topic": "Two-digit subtraction with borrowing (e.g. 52 - 27)", "context": "A government primary school in India. One teacher, no teaching assistant, a blackboard, 40 minutes."}, "children": [{"id": "rahul", "name": "Rahul", "avatar": "🧒🏽", "aser_band": "Letter level", "public_profile": "Quiet. Rarely volunteers.", "hidden_level": "Two full years behind. Recognises letters but cannot read words. In maths he can count objects to 20 but loses track past that. He has no concept of place value at all, so borrowing is meaningless to him — he is not making an error in the procedure, he is nowhere near the procedure.", "hidden_misconception": "Does not understand that the '5' in 52 means five tens. Treats every digit as a separate small number."}, {"id": "priya", "name": "Priya", "avatar": "👧🏽", "aser_band": "Word level", "public_profile": "Confident. Always has an answer ready.", "hidden_level": "Roughly one year behind, but it is hidden by her confidence.", "hidden_misconception": "The smaller-from-larger bug — the single most documented subtraction error. In any column she subtracts the smaller digit from the larger one regardless of which is on top. For 52 - 27 she does 5-2=3 and 7-2=5 and answers 35. She is fast, fluent and completely wrong, and she will defend the answer because the procedure feels consistent to her."}, {"id": "anjali", "name": "Anjali", "avatar": "👧🏾", "aser_band": "Std I text", "public_profile": "At grade level. Does the work.", "hidden_level": "Genuinely at grade level and mostly secure with borrowing.", "hidden_misconception": "No real conceptual bug, but she is unsure of herself. When she hesitates she glances at Imran's slate and copies. So a correct answer from Anjali is sometimes not hers, which makes her look more secure than she is."}, {"id": "imran", "name": "Imran", "avatar": "🧑🏽", "aser_band": "Std I text", "public_profile": "Eager. Talks a lot.", "hidden_level": "At grade level for ordinary borrowing.", "hidden_misconception": "The zero bug. He handles 52 - 27 fine, but breaks on a zero in the top number. For 40 - 18 he cannot borrow from the 0 and either writes 38 or freezes. The bug only appears if a problem with a zero is put in front of him."}, {"id": "meera", "name": "Meera", "avatar": "👧", "aser_band": "Std II text", "public_profile": "Finishes early.", "hidden_level": "Two years ahead. Already comfortable with three-digit subtraction and mental strategies.", "hidden_misconception": "None in subtraction. Her risk is not error, it is waste — she is given nothing to do."}], "transcript": [{"role": "teacher", "content": "Good morning class. Today we learn subtraction with borrowing. Who can tell me, what is 52 minus 27?"}, {"role": "class", "content": {"responses": [{"child_id": "priya", "speaks": true, "says": "Didi! 35! Mera ho gaya!", "behaviour": "hand up before the question ends", "internal_state": "5 minus 2 is 3, 7 minus 2 is 5. Easy.", "engagement": "engaged"}, {"child_id": "imran", "speaks": true, "says": "25 hai didi, 25!", "behaviour": "shouts over Priya", "internal_state": "borrowed one from the 5, so 12 minus 7", "engagement": "engaged"}, {"child_id": "meera", "speaks": true, "says": "25.", "behaviour": "says it flatly, already finished", "internal_state": "done in two seconds. is this the whole lesson?", "engagement": "engaged"}, {"child_id": "anjali", "speaks": false, "says": null, "behaviour": "writes something, then glances at Imran's slate", "internal_state": "Imran ne 25 likha hai, main bhi wahi likh doon", "engagement": "engaged"}, {"child_id": "rahul", "speaks": false, "says": null, "behaviour": "looking at the floor, hands under the desk", "internal_state": "52 kitna hota hai? paanch aur do alag hain na?", "engagement": "drifting"}], "class_note": "Three answers came in under four seconds. Two children have not spoken."}}, {"role": "teacher", "content": "Very good Imran! 25 is correct. Let's try another. 63 minus 28?"}, {"role": "class", "content": {"responses": [{"child_id": "imran", "speaks": true, "says": "35 didi! 35!", "behaviour": "half out of his seat", "internal_state": "I am good at this, didi keeps picking me", "engagement": "engaged"}, {"child_id": "priya", "speaks": true, "says": "45 didi! Mera bhi ho gaya!", "behaviour": "waving her slate", "internal_state": "6 minus 2 is 4, 8 minus 3 is 5. Same as before.", "engagement": "engaged"}, {"child_id": "anjali", "speaks": false, "says": null, "behaviour": "pauses, looks sideways, then writes", "internal_state": "Imran ne 35 bola, theek hi hoga", "engagement": "engaged"}, {"child_id": "meera", "speaks": false, "says": null, "behaviour": "has started drawing in the margin", "internal_state": "ab kya karun. same sum again.", "engagement": "drifting"}, {"child_id": "rahul", "speaks": false, "says": null, "behaviour": "completely still, slate blank", "internal_state": "", "engagement": "lost"}], "class_note": null}}, {"role": "teacher", "content": "Correct again Imran. Anjali, what answer did you get?"}, {"role": "class", "content": {"responses": [{"child_id": "anjali", "speaks": true, "says": "35 didi.", "behaviour": "glances at Imran's slate first, then answers", "internal_state": "hope that was right, I wasn't sure about the borrow", "engagement": "engaged"}, {"child_id": "priya", "speaks": true, "says": "Par didi mera 45 aaya!", "behaviour": "insistent, holding up her slate", "internal_state": "my method works every time, why is 35 the answer?", "engagement": "engaged"}, {"child_id": "imran", "speaks": true, "says": "Priya galat hai didi!", "behaviour": "grinning", "internal_state": "", "engagement": "engaged"}, {"child_id": "meera", "speaks": false, "says": null, "behaviour": "drawing, not looking up", "internal_state": "", "engagement": "lost"}, {"child_id": "rahul", "speaks": false, "says": null, "behaviour": "slate still blank", "internal_state": "", "engagement": "lost"}], "class_note": null}}, {"role": "teacher", "content": "Priya, that is not right. The answer is 35. Please be careful and check your work."}, {"role": "class", "content": {"responses": [{"child_id": "priya", "speaks": true, "says": "Ok didi. Sorry didi.", "behaviour": "rubs out her answer, writes 35", "internal_state": "maybe I copied the numbers wrong. my method is fine.", "engagement": "engaged"}, {"child_id": "anjali", "speaks": false, "says": null, "behaviour": "quietly rechecking her own sum", "internal_state": "", "engagement": "engaged"}, {"child_id": "imran", "speaks": false, "says": null, "behaviour": "waiting for the next question", "internal_state": "", "engagement": "engaged"}, {"child_id": "meera", "speaks": false, "says": null, "behaviour": "has turned to talk to the girl behind her", "internal_state": "", "engagement": "lost"}, {"child_id": "rahul", "speaks": false, "says": null, "behaviour": "head resting on his arm", "internal_state": "", "engagement": "lost"}], "class_note": "Priya changed her answer without changing her method."}}, {"role": "teacher", "content": "Good. Now everyone open your books and do sums 1 to 5 on page 42."}, {"role": "class", "content": {"responses": [{"child_id": "imran", "speaks": false, "says": null, "behaviour": "opens the book and starts immediately", "internal_state": "", "engagement": "engaged"}, {"child_id": "anjali", "speaks": false, "says": null, "behaviour": "opens the book, shifts closer to Imran", "internal_state": "", "engagement": "engaged"}, {"child_id": "priya", "speaks": false, "says": null, "behaviour": "writing fast and confidently", "internal_state": "bada minus chhota, hamesha", "engagement": "engaged"}, {"child_id": "meera", "speaks": false, "says": null, "behaviour": "finishes all five in under a minute, then sits", "internal_state": "", "engagement": "lost"}, {"child_id": "rahul", "speaks": false, "says": null, "behaviour": "opens the book to the wrong page, then closes it", "internal_state": "", "engagement": "lost"}], "class_note": null}}, {"role": "teacher", "content": "Rahul, why are you not writing anything?"}, {"role": "class", "content": {"responses": [{"child_id": "rahul", "speaks": true, "says": "Haan didi.", "behaviour": "long pause, picks up the pencil, writes nothing", "internal_state": "main shuru kahan se karun. 52 mein paanch alag hai aur do alag.", "engagement": "lost"}, {"child_id": "imran", "speaks": false, "says": null, "behaviour": "still working", "internal_state": "", "engagement": "engaged"}, {"child_id": "priya", "speaks": false, "says": null, "behaviour": "finished already, waiting", "internal_state": "", "engagement": "engaged"}, {"child_id": "anjali", "speaks": false, "says": null, "behaviour": "copying the last two sums", "internal_state": "", "engagement": "engaged"}, {"child_id": "meera", "speaks": false, "says": null, "behaviour": "has stopped participating entirely", "internal_state": "", "engagement": "lost"}], "class_note": "Rahul said yes. Rahul wrote nothing."}}], "report": {"headline": "You taught Imran a very good lesson, and four other children sat through it.", "scores": {"attention_equity": 26, "question_quality": 31, "misconception_diagnosis": 20}, "attention": [{"child_id": "imran", "times_addressed": 3, "times_spoke": 4, "note": "Named and praised twice. He already understood the content at turn one."}, {"child_id": "priya", "times_addressed": 1, "times_spoke": 4, "note": "Spoke often but was only ever corrected, never questioned."}, {"child_id": "anjali", "times_addressed": 1, "times_spoke": 1, "note": "Called on once. Her answer was copied and you had no way to know."}, {"child_id": "meera", "times_addressed": 0, "times_spoke": 1, "note": "Never addressed. Lost by turn three and never came back."}, {"child_id": "rahul", "times_addressed": 1, "times_spoke": 1, "note": "Addressed once, at turn six, after he had already stopped."}], "misconceptions": [{"child_id": "priya", "hidden_misconception": "Subtracts the smaller digit from the larger in every column, regardless of position. 52-27 becomes 35 because 5-2=3 and 7-2=5.", "surfaced": false, "evidence": "At turn four you told her the answer was 35 and asked her to be careful. She erased 45, wrote 35, and kept the method. Her bug is fully intact and will reappear in every sum on page 42. One question — 'Priya, show me the ones column out loud' — would have exposed it."}, {"child_id": "imran", "hidden_misconception": "Cannot borrow across a zero. 40-18 breaks him.", "surfaced": false, "evidence": "Both sums you set had a non-zero top digit in the ones place. His bug was never tested, so his two correct answers told you less than they appeared to."}, {"child_id": "rahul", "hidden_misconception": "No place-value concept. The 5 in 52 is not five tens to him.", "surfaced": false, "evidence": "You asked why he wasn't writing. He said 'haan didi' — the standard answer from a child who has understood nothing. The lesson was never within reach for him and no question you asked would have revealed that."}, {"child_id": "anjali", "hidden_misconception": "Copies when unsure, so her correct answers overstate her security.", "surfaced": false, "evidence": "At turn three she glanced sideways before answering 35. That pause was the signal. 'How did you get it?' would have separated her from Imran's slate."}, {"child_id": "meera", "hidden_misconception": "None — her risk is being unoccupied.", "surfaced": false, "evidence": "She answered correctly at turn one and was never spoken to again. By turn three she was drawing. By turn five she was gone."}], "moments": [{"turn": 1, "what_happened": "Priya answered 35 and Imran answered 25. You took Imran's answer and moved on.", "what_to_try": "Two different answers in the room is the most useful thing that can happen. Hold both. 'Priya got 35, Imran got 25. Priya, walk me through the ones column.' The bug surfaces in ten seconds and the whole class watches it happen."}, {"turn": 3, "what_happened": "You asked Anjali what answer she got, after Imran had already said it aloud.", "what_to_try": "Ask for the method, not the answer, and ask before anyone else has spoken. 'Anjali, before we hear anyone — how did you start?'"}, {"turn": 4, "what_happened": "You corrected Priya's answer without touching her reasoning.", "what_to_try": "Never hand over the right answer to a child with a consistent wrong method. She will accept the number and keep the method. Ask her to do one column aloud."}], "next_time": ["Set one sum with a zero in the top number, like 40 minus 18. It is the single cheapest way to find out whether Imran and Anjali actually understand borrowing or have only memorised it.", "Before you praise a correct answer, ask a second child how they got theirs. You spent this lesson confirming what the strongest child already knew."]}}</script>
+<script>
+const D = JSON.parse(document.getElementById("data").textContent);
+const byId = Object.fromEntries(D.children.map(c => [c.id, c]));
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g,
+  m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+
+// Pair the flat transcript into [teacher line, class response] turns.
+const turns = [];
+for (let i = 0; i < D.transcript.length; i++) {
+  if (D.transcript[i].role === "teacher") {
+    const next = D.transcript[i + 1];
+    turns.push({ line: D.transcript[i].content,
+                 responses: (next && next.role === "class") ? next.content.responses : [],
+                 note: (next && next.role === "class") ? next.content.class_note : null });
+  }
+}
+
+const kidsEl = document.getElementById("kids");
+function paintKids(state) {
+  kidsEl.innerHTML = D.children.map(c => `
+    <div class="kid" data-eng="${esc(state[c.id] || "engaged")}">
+      <div class="face" aria-hidden="true">${c.avatar}</div>
+      <div class="nm">${esc(c.name)}</div>
+      <div class="bd">${esc(c.aser_band)}</div>
+      <div class="st">● ${esc(state[c.id] || "engaged")}</div>
+    </div>`).join("");
+}
+const engagement = {};
+D.children.forEach(c => engagement[c.id] = "engaged");
+paintKids(engagement);
+document.getElementById("pubnote").textContent =
+  "All you are told up front — " +
+  D.children.map(c => c.name + ": " + c.public_profile).join("  ·  ");
+
+let shown = 0;
+const turnsEl = document.getElementById("turns");
+const progEl = document.getElementById("prog");
+const nextBtn = document.getElementById("next");
+const skipBtn = document.getElementById("skip");
+
+function renderTurn(t, i) {
+  const rows = t.responses.map(r => {
+    const c = byId[r.child_id] || { name: r.child_id, avatar: "" };
+    const body = (r.speaks && r.says)
+      ? `<p class="says"><span class="who">${c.avatar} ${esc(c.name)}:</span>
+           “${esc(r.says)}”</p>
+         ${r.behaviour ? `<div class="beh">${esc(r.behaviour)}</div>` : ""}`
+      : `<div class="silent">${c.avatar} ${esc(c.name)} — ${esc(r.behaviour || "no reaction")}</div>`;
+    return `<div class="resp">${body}
+      ${r.internal_state ? `<div class="xr">thinking: ${esc(r.internal_state)}</div>` : ""}
+    </div>`;
+  }).join("");
+  return `<div class="turn">
+    <div class="tline"><b>You</b> — ${esc(t.line)}</div>
+    ${rows}
+    ${t.note ? `<div class="note">${esc(t.note)}</div>` : ""}
+  </div>`;
+}
+
+function step() {
+  if (shown >= turns.length) return;
+  const t = turns[shown];
+  turnsEl.insertAdjacentHTML("beforeend", renderTurn(t, shown));
+  t.responses.forEach(r => { if (r.engagement) engagement[r.child_id] = r.engagement; });
+  paintKids(engagement);
+  shown++;
+  sync();
+}
+
+function sync() {
+  progEl.textContent = `Turn ${Math.min(shown, turns.length)} of ${turns.length}`;
+  if (shown >= turns.length) {
+    nextBtn.disabled = true;
+    skipBtn.disabled = true;
+    nextBtn.textContent = "Lesson over";
+    document.body.classList.add("xray");
+    document.getElementById("endzone").classList.remove("hidden");
+  }
+}
+
+nextBtn.addEventListener("click", step);
+skipBtn.addEventListener("click", () => { while (shown < turns.length) step(); });
+sync();
+
+// ---- the reveal ----
+const hid = D.children.map(c => `<tr>
+    <td><strong>${c.avatar} ${esc(c.name)}</strong><br><span class="beh">${esc(c.aser_band)}</span></td>
+    <td>${esc(c.hidden_level)}</td>
+    <td>${esc(c.hidden_misconception)}</td>
+  </tr>`).join("");
+document.getElementById("hidden-table").innerHTML =
+  `<thead><tr><th>Child</th><th>Actual level</th><th>Hidden misconception</th></tr></thead>
+   <tbody>${hid}</tbody>`;
+
+const rep = D.report;
+document.getElementById("headline").textContent = rep.headline;
+
+const SCORE_LABELS = {
+  attention_equity: "Attention equity",
+  question_quality: "Question quality",
+  misconception_diagnosis: "Misconception diagnosis",
+};
+document.getElementById("scores").innerHTML =
+  Object.entries(SCORE_LABELS).map(([k, label]) => {
+    const v = rep.scores[k];
+    return `<div class="score">
+      <div class="k">${label}</div>
+      <div class="v">${esc(v)}<span style="font-size:.9rem;font-weight:400;color:var(--muted)">/100</span></div>
+      <div class="meter"><i style="width:${Math.max(0, Math.min(100, Number(v) || 0))}%"></i></div>
+    </div>`;
+  }).join("");
+
+document.getElementById("attention").innerHTML =
+  `<thead><tr><th>Child</th><th>Addressed</th><th>Spoke</th><th>Note</th></tr></thead><tbody>` +
+  rep.attention.map(a => {
+    const c = byId[a.child_id] || { name: a.child_id, avatar: "" };
+    return `<tr><td><strong>${c.avatar} ${esc(c.name)}</strong></td>
+      <td class="n">${esc(a.times_addressed)}</td>
+      <td class="n">${esc(a.times_spoke)}</td>
+      <td>${esc(a.note)}</td></tr>`;
+  }).join("") + `</tbody>`;
+
+document.getElementById("misconceptions").innerHTML =
+  `<thead><tr><th>Child</th><th>Surfaced?</th><th>Evidence</th></tr></thead><tbody>` +
+  rep.misconceptions.map(m => {
+    const c = byId[m.child_id] || { name: m.child_id, avatar: "" };
+    return `<tr><td><strong>${c.avatar} ${esc(c.name)}</strong><br>
+        <span class="beh">${esc(m.hidden_misconception)}</span></td>
+      <td><span class="tag ${m.surfaced ? "yes" : "no"}">${m.surfaced ? "surfaced" : "missed"}</span></td>
+      <td>${esc(m.evidence)}</td></tr>`;
+  }).join("") + `</tbody>`;
+
+document.getElementById("moments").innerHTML = rep.moments.map(m => `
+  <div class="turn">
+    <div class="tline"><b>Turn ${esc(m.turn)}</b> — ${esc(m.what_happened)}</div>
+    <div class="resp"><p class="says"><span class="who">What to try:</span>
+      ${esc(m.what_to_try)}</p></div>
+  </div>`).join("");
+
+document.getElementById("nexttime").innerHTML =
+  rep.next_time.map(n => `<li>${esc(n)}</li>`).join("");
+</script>
+</body>
+</html>
