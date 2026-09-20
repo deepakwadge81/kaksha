@@ -38,6 +38,21 @@ streamlit run app.py
 
 ## Deploy
 
+`docs/` is a plain static directory, so any static host serves it with no build step.
+Config for three is committed, each setting the publish directory and a CSP whose
+`connect-src` allows only `api.anthropic.com` (verified against a real live turn):
+
+| Host | Import path | Notes |
+|---|---|---|
+| GitHub Pages | already live | `main` / `docs`, no config needed |
+| Netlify | Add new site → Import an existing project → this repo | `netlify.toml` fills in everything |
+| Vercel | Add New → Project → Import this repo | `vercel.json` sets `outputDirectory` |
+| Render | New → Blueprint → this repo | `render.yaml` declares a **static site** — CDN, no cold start (a free *web service* would sleep after 15 min) |
+
+All four auto-redeploy on every push to `main`.
+
+### The Streamlit app
+
 1. Push to a **public** GitHub repo.
 2. share.streamlit.io → New app → pick the repo → main file `app.py`.
 3. Advanced settings → Secrets → **leave empty**. A Community Cloud app has no
@@ -122,7 +137,7 @@ which is deterministic.
 | `build_play.py` | Generates `docs/play/index.html` — the live, backend-free browser build |
 | `build_play_verify.py` | Proves the browser prompts match `prompts.py` byte-for-byte |
 | `build_play_core_test.py` | Runs the browser port of `core.py` against the offline fixtures |
-| `render.yaml` / `vercel.json` | One-click static deploys of `docs/` |
+| `netlify.toml` / `vercel.json` / `render.yaml` | Zero-config static deploys of `docs/` |
 
 ---
 
