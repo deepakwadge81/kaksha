@@ -126,8 +126,14 @@ with st.sidebar:
 
     model = st.text_input("Model", value=DEFAULT_MODEL, help="Swap if you hit a 404.")
     language = st.radio("Children speak", ["Hinglish", "English"], horizontal=True)
-    demo_mode = st.toggle("Demo mode (offline)", value=False,
-                          help="Replays a recorded session. Use if the wifi dies.")
+    # Defaults ON when there's no key, so a visitor with no credentials still lands
+    # on a full recorded lesson instead of an empty classroom and an error.
+    demo_mode = st.toggle("Demo mode (offline)", value=not key,
+                          help="Replays a recorded session. On by default until you add "
+                               "a key; also use it if the wifi dies.")
+    if demo_mode:
+        st.caption("Showing a recorded lesson. Add a key above, then press "
+                   "**New lesson** to teach a live class.")
 
     st.divider()
     st.markdown(f"**{LESSON['grade']} · {LESSON['subject']}**")
