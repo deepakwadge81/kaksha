@@ -40,8 +40,15 @@ streamlit run app.py
 
 1. Push to a **public** GitHub repo.
 2. share.streamlit.io → New app → pick the repo → main file `app.py`.
-3. Advanced settings → Secrets → `ANTHROPIC_API_KEY = "sk-ant-..."`.
+3. Advanced settings → Secrets → **leave empty**. A Community Cloud app has no
+   login, so a key in its secrets is a key anyone with the URL can spend. With no
+   secret set, the app opens in Demo mode (a full recorded lesson, free) and a
+   visitor who wants to teach live pastes their own key into the sidebar.
 4. Deploy.
+
+Put `ANTHROPIC_API_KEY = "sk-ant-..."` in Secrets **only** for a private or
+short-lived demo where you accept that every visitor spends your credits — and
+set a spend limit on that key in the Anthropic Console if you do.
 
 `.gitignore` already excludes `.streamlit/secrets.toml`. The key never enters the repo.
 
