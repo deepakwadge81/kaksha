@@ -1,0 +1,137 @@
+{
+  "transcript": [
+    {
+      "role": "teacher",
+      "content": "Good morning class. Today we learn subtraction with borrowing. Who can tell me, what is 52 minus 27?"
+    },
+    {
+      "role": "class",
+      "content": {
+        "responses": [
+          {"child_id": "priya", "speaks": true, "says": "Didi! 35! Mera ho gaya!", "behaviour": "hand up before the question ends", "internal_state": "5 minus 2 is 3, 7 minus 2 is 5. Easy.", "engagement": "engaged"},
+          {"child_id": "imran", "speaks": true, "says": "25 hai didi, 25!", "behaviour": "shouts over Priya", "internal_state": "borrowed one from the 5, so 12 minus 7", "engagement": "engaged"},
+          {"child_id": "meera", "speaks": true, "says": "25.", "behaviour": "says it flatly, already finished", "internal_state": "done in two seconds. is this the whole lesson?", "engagement": "engaged"},
+          {"child_id": "anjali", "speaks": false, "says": null, "behaviour": "writes something, then glances at Imran's slate", "internal_state": "Imran ne 25 likha hai, main bhi wahi likh doon", "engagement": "engaged"},
+          {"child_id": "rahul", "speaks": false, "says": null, "behaviour": "looking at the floor, hands under the desk", "internal_state": "52 kitna hota hai? paanch aur do alag hain na?", "engagement": "drifting"}
+        ],
+        "class_note": "Three answers came in under four seconds. Two children have not spoken."
+      }
+    },
+    {
+      "role": "teacher",
+      "content": "Very good Imran! 25 is correct. Let's try another. 63 minus 28?"
+    },
+    {
+      "role": "class",
+      "content": {
+        "responses": [
+          {"child_id": "imran", "speaks": true, "says": "35 didi! 35!", "behaviour": "half out of his seat", "internal_state": "I am good at this, didi keeps picking me", "engagement": "engaged"},
+          {"child_id": "priya", "speaks": true, "says": "45 didi! Mera bhi ho gaya!", "behaviour": "waving her slate", "internal_state": "6 minus 2 is 4, 8 minus 3 is 5. Same as before.", "engagement": "engaged"},
+          {"child_id": "anjali", "speaks": false, "says": null, "behaviour": "pauses, looks sideways, then writes", "internal_state": "Imran ne 35 bola, theek hi hoga", "engagement": "engaged"},
+          {"child_id": "meera", "speaks": false, "says": null, "behaviour": "has started drawing in the margin", "internal_state": "ab kya karun. same sum again.", "engagement": "drifting"},
+          {"child_id": "rahul", "speaks": false, "says": null, "behaviour": "completely still, slate blank", "internal_state": "", "engagement": "lost"}
+        ],
+        "class_note": null
+      }
+    },
+    {
+      "role": "teacher",
+      "content": "Correct again Imran. Anjali, what answer did you get?"
+    },
+    {
+      "role": "class",
+      "content": {
+        "responses": [
+          {"child_id": "anjali", "speaks": true, "says": "35 didi.", "behaviour": "glances at Imran's slate first, then answers", "internal_state": "hope that was right, I wasn't sure about the borrow", "engagement": "engaged"},
+          {"child_id": "priya", "speaks": true, "says": "Par didi mera 45 aaya!", "behaviour": "insistent, holding up her slate", "internal_state": "my method works every time, why is 35 the answer?", "engagement": "engaged"},
+          {"child_id": "imran", "speaks": true, "says": "Priya galat hai didi!", "behaviour": "grinning", "internal_state": "", "engagement": "engaged"},
+          {"child_id": "meera", "speaks": false, "says": null, "behaviour": "drawing, not looking up", "internal_state": "", "engagement": "lost"},
+          {"child_id": "rahul", "speaks": false, "says": null, "behaviour": "slate still blank", "internal_state": "", "engagement": "lost"}
+        ],
+        "class_note": null
+      }
+    },
+    {
+      "role": "teacher",
+      "content": "Priya, that is not right. The answer is 35. Please be careful and check your work."
+    },
+    {
+      "role": "class",
+      "content": {
+        "responses": [
+          {"child_id": "priya", "speaks": true, "says": "Ok didi. Sorry didi.", "behaviour": "rubs out her answer, writes 35", "internal_state": "maybe I copied the numbers wrong. my method is fine.", "engagement": "engaged"},
+          {"child_id": "anjali", "speaks": false, "says": null, "behaviour": "quietly rechecking her own sum", "internal_state": "", "engagement": "engaged"},
+          {"child_id": "imran", "speaks": false, "says": null, "behaviour": "waiting for the next question", "internal_state": "", "engagement": "engaged"},
+          {"child_id": "meera", "speaks": false, "says": null, "behaviour": "has turned to talk to the girl behind her", "internal_state": "", "engagement": "lost"},
+          {"child_id": "rahul", "speaks": false, "says": null, "behaviour": "head resting on his arm", "internal_state": "", "engagement": "lost"}
+        ],
+        "class_note": "Priya changed her answer without changing her method."
+      }
+    },
+    {
+      "role": "teacher",
+      "content": "Good. Now everyone open your books and do sums 1 to 5 on page 42."
+    },
+    {
+      "role": "class",
+      "content": {
+        "responses": [
+          {"child_id": "imran", "speaks": false, "says": null, "behaviour": "opens the book and starts immediately", "internal_state": "", "engagement": "engaged"},
+          {"child_id": "anjali", "speaks": false, "says": null, "behaviour": "opens the book, shifts closer to Imran", "internal_state": "", "engagement": "engaged"},
+          {"child_id": "priya", "speaks": false, "says": null, "behaviour": "writing fast and confidently", "internal_state": "bada minus chhota, hamesha", "engagement": "engaged"},
+          {"child_id": "meera", "speaks": false, "says": null, "behaviour": "finishes all five in under a minute, then sits", "internal_state": "", "engagement": "lost"},
+          {"child_id": "rahul", "speaks": false, "says": null, "behaviour": "opens the book to the wrong page, then closes it", "internal_state": "", "engagement": "lost"}
+        ],
+        "class_note": null
+      }
+    },
+    {
+      "role": "teacher",
+      "content": "Rahul, why are you not writing anything?"
+    },
+    {
+      "role": "class",
+      "content": {
+        "responses": [
+          {"child_id": "rahul", "speaks": true, "says": "Haan didi.", "behaviour": "long pause, picks up the pencil, writes nothing", "internal_state": "main shuru kahan se karun. 52 mein paanch alag hai aur do alag.", "engagement": "lost"},
+          {"child_id": "imran", "speaks": false, "says": null, "behaviour": "still working", "internal_state": "", "engagement": "engaged"},
+          {"child_id": "priya", "speaks": false, "says": null, "behaviour": "finished already, waiting", "internal_state": "", "engagement": "engaged"},
+          {"child_id": "anjali", "speaks": false, "says": null, "behaviour": "copying the last two sums", "internal_state": "", "engagement": "engaged"},
+          {"child_id": "meera", "speaks": false, "says": null, "behaviour": "has stopped participating entirely", "internal_state": "", "engagement": "lost"}
+        ],
+        "class_note": "Rahul said yes. Rahul wrote nothing."
+      }
+    }
+  ],
+  "report": {
+    "headline": "You taught Imran a very good lesson, and four other children sat through it.",
+    "scores": {
+      "attention_equity": 26,
+      "question_quality": 31,
+      "misconception_diagnosis": 20
+    },
+    "attention": [
+      {"child_id": "imran", "times_addressed": 3, "times_spoke": 4, "note": "Named and praised twice. He already understood the content at turn one."},
+      {"child_id": "priya", "times_addressed": 1, "times_spoke": 4, "note": "Spoke often but was only ever corrected, never questioned."},
+      {"child_id": "anjali", "times_addressed": 1, "times_spoke": 1, "note": "Called on once. Her answer was copied and you had no way to know."},
+      {"child_id": "meera", "times_addressed": 0, "times_spoke": 1, "note": "Never addressed. Lost by turn three and never came back."},
+      {"child_id": "rahul", "times_addressed": 1, "times_spoke": 1, "note": "Addressed once, at turn six, after he had already stopped."}
+    ],
+    "misconceptions": [
+      {"child_id": "priya", "hidden_misconception": "Subtracts the smaller digit from the larger in every column, regardless of position. 52-27 becomes 35 because 5-2=3 and 7-2=5.", "surfaced": false, "evidence": "At turn four you told her the answer was 35 and asked her to be careful. She erased 45, wrote 35, and kept the method. Her bug is fully intact and will reappear in every sum on page 42. One question — 'Priya, show me the ones column out loud' — would have exposed it."},
+      {"child_id": "imran", "hidden_misconception": "Cannot borrow across a zero. 40-18 breaks him.", "surfaced": false, "evidence": "Both sums you set had a non-zero top digit in the ones place. His bug was never tested, so his two correct answers told you less than they appeared to."},
+      {"child_id": "rahul", "hidden_misconception": "No place-value concept. The 5 in 52 is not five tens to him.", "surfaced": false, "evidence": "You asked why he wasn't writing. He said 'haan didi' — the standard answer from a child who has understood nothing. The lesson was never within reach for him and no question you asked would have revealed that."},
+      {"child_id": "anjali", "hidden_misconception": "Copies when unsure, so her correct answers overstate her security.", "surfaced": false, "evidence": "At turn three she glanced sideways before answering 35. That pause was the signal. 'How did you get it?' would have separated her from Imran's slate."},
+      {"child_id": "meera", "hidden_misconception": "None — her risk is being unoccupied.", "surfaced": false, "evidence": "She answered correctly at turn one and was never spoken to again. By turn three she was drawing. By turn five she was gone."}
+    ],
+    "moments": [
+      {"turn": 1, "what_happened": "Priya answered 35 and Imran answered 25. You took Imran's answer and moved on.", "what_to_try": "Two different answers in the room is the most useful thing that can happen. Hold both. 'Priya got 35, Imran got 25. Priya, walk me through the ones column.' The bug surfaces in ten seconds and the whole class watches it happen."},
+      {"turn": 3, "what_happened": "You asked Anjali what answer she got, after Imran had already said it aloud.", "what_to_try": "Ask for the method, not the answer, and ask before anyone else has spoken. 'Anjali, before we hear anyone — how did you start?'"},
+      {"turn": 4, "what_happened": "You corrected Priya's answer without touching her reasoning.", "what_to_try": "Never hand over the right answer to a child with a consistent wrong method. She will accept the number and keep the method. Ask her to do one column aloud."}
+    ],
+    "next_time": [
+      "Set one sum with a zero in the top number, like 40 minus 18. It is the single cheapest way to find out whether Imran and Anjali actually understand borrowing or have only memorised it.",
+      "Before you praise a correct answer, ask a second child how they got theirs. You spent this lesson confirming what the strongest child already knew."
+    ]
+  }
+}
